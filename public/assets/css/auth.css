@@ -93,5 +93,7 @@ p.text-muted {
 }
 .se-connecter {
     color: #fff;
+    background-color: #007bff;
+    font-size: 13px;
     
 }
