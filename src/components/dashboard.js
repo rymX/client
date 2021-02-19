@@ -1,42 +1,74 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import 'antd/dist/antd.css';
 
-import { Modal, Button } from 'antd';
+import { Modal, Button, Form, Input, } from 'antd';
+
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
 
 export default class Dashboard extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
-      actualUserid :"",
-      wishlists : [],
-      profucts:{},
+    this.state = {
+      actualUserid: "",
+      wishlists: [],
+      profucts: {},
+      isModalVisible: false
     }
-    }
-    getActualuserid = (cookies) => {
-      return cookies.split("; ").reduce((r, v) => {
-        const parts = v.split("=");
-        return parts[0] === 'newuser' ? decodeURIComponent(parts[1]) : r;
-      }, "");
-    };
-    getWishlists=(id)=>{
-      axios
+  }
+  getActualuserid = (cookies) => {
+    return cookies.split("; ").reduce((r, v) => {
+      const parts = v.split("=");
+      return parts[0] === 'newuser' ? decodeURIComponent(parts[1]) : r;
+    }, "");
+  };
+  getWishlists = (id) => {
+    axios
       .get(
         `http://localhost:4000/wishlist/user/${id}`
       )
       .then((response) => {
-       this.setState({wishlists : response.data})
+        this.setState({ wishlists: response.data })
       })
       .catch((error) => {
         console.log({ " error": error });
       });
-    }
-    componentDidMount(){
-      const id = this.getActualuserid(document.cookie);
-      this.setState({actualUserid : id});
-      this.getWishlists(id)
-    }
+  }
+  componentDidMount() {
+    const id = this.getActualuserid(document.cookie);
+    this.setState({ actualUserid: id });
+    this.getWishlists(id)
+  }
+  showModal = () => {
+    this.setState({ isModalVisible: true })
+  };
+
+  onFinish = (values) => {
+    console.log(values);
+    this.setState({ isModalVisible: false })
+  };
+
+
+  onCancel = () => {
+    this.setState({ isModalVisible: false })
+  };
+
   render() {
+    console.log('in state : ', this.state.isModalVisible);
     return (
       <div className="wrapper">
         <div id="body">
@@ -158,15 +190,42 @@ export default class Dashboard extends Component {
                             className="sidebar-header list-unstyled components text-secondary"
                           >
                             <li>
-                              <a style={{ color: "#22a1f9" }} href>
+                              {/* <a style={{ color: "#22a1f9" }} href>
                                 <i
                                   style={{ marginRight: "40px" }}
                                   className="fas fa-plus"
                                 />{" "}
                                 Add wishlist
-                              </a>
+                              </a> */}
+
+                              <Button onClick={this.showModal} type="primary">
+                                Add Wishlist
+      </Button>
                             </li>
                           </div>
+
+                          <Modal title="Add wishlist "
+                            visible={this.state.isModalVisible}
+                            footer={null}
+                           >
+                            <Form {...layout} ref={this.formRef} name="control-ref" onFinish={this.onFinish}>
+                              <Form.Item name="wishlistname" label="wishlist name" rules={[{ required: true , message: 'Please input your wishlist name!'}]}>
+                                <Input />
+                              </Form.Item>
+                             
+                              <Form.Item {...tailLayout}>
+                              <Button htmlType="button" onClick={this.onCancel}>
+                                  Cancel
+          </Button>
+                                <Button type="primary" htmlType="submit">
+                                  Done
+          </Button>
+                            
+                              </Form.Item>
+                            </Form>
+
+
+                          </Modal>
                           {/* <div>
 
                           <ul
@@ -187,11 +246,11 @@ export default class Dashboard extends Component {
                           
                           </div> */}
                           {/* { this.state.wishlists.length ? <ul> <li> hello</li> </ul> : <ul> <li > hello</li> </ul> } */}
-                       
+
                           {
-                  this.state.wishlists.length ? <Sidebar list={this.state.wishlists}/> : <ul className="list-unstyled components text-secondary"> <li style={{ padding: "50px 25px" }}>
-                    <b> there are no Wishlists yet</b> <br/>Add your first wishlist <i className="fas fa-heart" /> </li></ul>
-                }
+                            this.state.wishlists.length ? <Sidebar list={this.state.wishlists} /> : <ul className="list-unstyled components text-secondary"> <li style={{ padding: "50px 25px" }}>
+                              <b> there are no Wishlists yet</b> <br />Add your first wishlist <i className="fas fa-heart" /> </li></ul>
+                          }
                         </nav>
                         <div id="body" className>
                           <div className>
