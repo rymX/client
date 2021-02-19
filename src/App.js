@@ -16,7 +16,6 @@ class App extends Component {
     this.setState({ 
        user: data
     })
-
   }
   render() {
     return (

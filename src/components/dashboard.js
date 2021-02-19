@@ -6,32 +6,37 @@ export default class Dashboard extends Component {
   constructor(props){
     super(props);
     this.state ={
+      actualUserid :"",
       wishlists : [],
-      userid :this.props.user.user
+      profucts:{},
     }
     }
-    componentDidMount(){
+    getActualuserid = (cookies) => {
+      return cookies.split("; ").reduce((r, v) => {
+        const parts = v.split("=");
+        return parts[0] === 'newuser' ? decodeURIComponent(parts[1]) : r;
+      }, "");
+    };
+    getWishlists=(id)=>{
       axios
       .get(
-        `http://localhost:4000/wishlist/user/${this.props.user.user}`
+        `http://localhost:4000/wishlist/user/${id}`
       )
       .then((response) => {
-        console.log(response);
        this.setState({wishlists : response.data})
       })
       .catch((error) => {
         console.log({ " error": error });
       });
     }
-
+    componentDidMount(){
+      const id = this.getActualuserid(document.cookie);
+      this.getWishlists(id)
+    }
   render() {
-    { console.log(this.props.user.user) }
-    this.state.wishlists.map((element)=>{
-      console.log(element['wishlistname']);
-    })
-    console.log(this.state.wishlists[0]);
+  
+    //this.todo(id);
     return (
-      
       <div className="wrapper">
         <div id="body">
           <div className="row">
@@ -55,7 +60,7 @@ export default class Dashboard extends Component {
                         aria-selected="false"
                       >
                         {" "}
-                        <i className="fas fa-heart" /> My Wishlists
+                        <i className="fas fa-heart" /> {this.props.user.user}
                       </a>
                     </li>
                     <li className="nav-item">
@@ -180,10 +185,11 @@ export default class Dashboard extends Component {
                           </ul>
                           
                           </div> */}
-                          {/* { this.state.wishlists.length ? <ul> <li> hello</li> </ul> : <ul> <li> hello</li> </ul> } */}
+                          {/* { this.state.wishlists.length ? <ul> <li> hello</li> </ul> : <ul> <li > hello</li> </ul> } */}
                        
                           {
-                  this.state.wishlists.length ? <Sidebar list={this.state.wishlists}/> : <div>you have no exp</div>
+                  this.state.wishlists.length ? <Sidebar list={this.state.wishlists}/> : <ul className="list-unstyled components text-secondary"> <li style={{ padding: "50px 25px" }}>
+                    <b> there are no Wishlists yet</b> <br/>Add your first wishlist <i className="fas fa-heart" /> </li></ul>
                 }
                         </nav>
                         <div id="body" className>
