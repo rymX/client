@@ -22,7 +22,7 @@ export default class Login extends Component {
       .then((response) => {
         console.log(response);
         if (response.data) {
-          this.props.handelLogin(response.data);
+         // this.props.handelLogin(response.data);
         this.props.history.push('/dashbord');
         }
       })

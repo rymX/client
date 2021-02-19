@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 
+import { Modal, Button } from 'antd';
+
 export default class Dashboard extends Component {
   constructor(props){
     super(props);
@@ -31,11 +33,10 @@ export default class Dashboard extends Component {
     }
     componentDidMount(){
       const id = this.getActualuserid(document.cookie);
+      this.setState({actualUserid : id});
       this.getWishlists(id)
     }
   render() {
-  
-    //this.todo(id);
     return (
       <div className="wrapper">
         <div id="body">
@@ -60,7 +61,7 @@ export default class Dashboard extends Component {
                         aria-selected="false"
                       >
                         {" "}
-                        <i className="fas fa-heart" /> {this.props.user.user}
+                        <i className="fas fa-heart" /> {this.state.actualUserid}
                       </a>
                     </li>
                     <li className="nav-item">

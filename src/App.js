@@ -10,13 +10,13 @@ class App extends Component {
   this.state={
     user:{}
   };
-  this.handelLogin = this.handelLogin.bind(this);
+ // this.handelLogin = this.handelLogin.bind(this);
   }
-  handelLogin = (data)=>{
-    this.setState({ 
-       user: data
-    })
-  }
+  // handelLogin = (data)=>{
+  //   this.setState({ 
+  //      user: data
+  //   })
+  // }
   render() {
     return (
       <div>
@@ -24,12 +24,12 @@ class App extends Component {
           <Switch>
             <Route exact path="/"
             render = { props => (
-              <Login {...props} handelLogin = {this.handelLogin}  />
+              <Login {...props}   />
             )}
             />
             <Route path="/dashbord"
             render = {props => (
-          <Dashboard {...props} user={this.state.user} />
+          <Dashboard {...props}  />
 
         )}
               />
