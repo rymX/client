@@ -492,3 +492,6 @@ table.dataTable>tbody>tr.child ul.dtr-details {
         flex-direction: row;
     }
 }
+#components-form-demo-control-ref .ant-btn {
+    margin-right: 8px;
+  }
