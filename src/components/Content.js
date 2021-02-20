@@ -35,7 +35,7 @@ class Content extends Component {
                 aria-controls="home"
                 aria-selected="false"
               >
-                <h4> {this.props.list[5]["wishlistname"]} </h4>
+                <h4> {this.props.list["wishlistname"]} </h4>
               </a>
             </li>
             <li className="nav-item ml-auto">

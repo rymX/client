@@ -3,9 +3,11 @@ import { Link  , withRouter} from 'react-router-dom';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 
-function Signup()  {  
+function Signup(props)  { 
+  console.log(props.user) ; 
   const history = useHistory();
  function  handlesubmit (e){
+
     
     e.preventDefault();
     const username= e.target.elements.username.value;

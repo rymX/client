@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
 import "antd/dist/antd.css";
+import { Link } from "react-router-dom";
 
 import { Modal, Button, Form, Input } from "antd";
 
@@ -26,6 +27,8 @@ export default class Dashboard extends Component {
     super(props);
     this.state = {
       actualUserid: "",
+      actualwishlist : [],
+      firstwishlist : {},
       wishlists: [],
       profucts: {},
       isModalVisible: false,
@@ -84,7 +87,35 @@ export default class Dashboard extends Component {
     this.setState({ isModalVisible: false });
     this.formRef.current.resetFields();
   };
+handleClick =(element) =>{
+  this.setState({actualwishlist : element})
 
+}
+getFirstElement =(list)=>{
+  console.log('okay')
+  list.map((element , index)=>{
+    if (index === 0){
+      console.log(element)
+      return element ;
+    }
+  })
+}
+logout = ()=>{
+   axios
+      .get(
+        `http://localhost:4000/user/logout`
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.data) {
+         // this.props.handelLogin(response.data);
+        this.props.history.push('/');
+        }
+      })
+      .catch((error) => {
+        console.log({ " error": error });
+      });
+}
   render() {
     return (
       <div className="wrapper">
@@ -127,65 +158,11 @@ export default class Dashboard extends Component {
                         <i className="fas fa-icons" /> My Products
                       </a>
                     </li>
-                    <li className="nav-item dropdown ml-auto">
-                      <div className="nav-dropdown">
-                        <a
-                          href
-                          className="nav-item nav-link dropdown-toggle text-secondary"
-                          data-toggle="dropdown"
-                        >
-                          <i className="fas fa-user-circle" />{" "}
-                          <i
-                            style={{ fontSize: ".8em" }}
-                            className="fas fa-caret-down"
-                          />
-                        </a>
-                        <div className="dropdown-menu dropdown-menu-right nav-link-menu">
-                          <ul className="nav-list">
-                            <li>
-                              <a href className="dropdown-item">
-                                <i className="fas fa-sign-out-alt" /> Logout
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
+                    <li className="nav-item  ml-auto">
+                      <button onClick={this.logout} > logout</button>
                     </li>
-                    <li className="nav-item dropdown ">
-                      <div className="nav-dropdown">
-                        <a
-                          href
-                          className="nav-item nav-link dropdown-toggle text-secondary"
-                          data-toggle="dropdown"
-                        >
-                          {" "}
-                          <span>TND</span>{" "}
-                          <i
-                            style={{ fontSize: ".8em" }}
-                            className="fas fa-caret-down"
-                          />
-                        </a>
-                        <div className="dropdown-menu dropdown-menu-right nav-link-menu">
-                          <ul className="nav-list">
-                            <li>
-                              <a href className="dropdown-item">
-                                <i className="fas fa-" />€{" "}
-                              </a>
-                            </li>
-                            <li>
-                              <a href className="dropdown-item">
-                                <i className="fas fa-" />€{" "}
-                              </a>
-                            </li>
-                            <li>
-                              <a href className="dropdown-item">
-                                <i className="fas fa-" />€{" "}
-                              </a>
-                            </li>
-                            <div className="dropdown-divider" />
-                          </ul>
-                        </div>
-                      </div>
+                    <li className="nav-item  ">
+                       <button> TND </button>
                     </li>
                   </ul>
 
@@ -255,7 +232,27 @@ export default class Dashboard extends Component {
                           </Modal>
 
                           {this.state.wishlists.length ? (
-                            <Sidebar list={this.state.wishlists} />
+                            this.state.wishlists.map((element, index) => {
+                              
+                              return (
+                                
+                                <div>
+                                  <ul
+                                    style={{ padding: "15px" }}
+                                    className="list-unstyled components text-secondary"
+                                  >
+                                    <li>
+                                      
+                                       <button onClick={ () => this.handleClick(element)}>
+                                       {element["wishlistname"]}
+                                       </button>
+                                       
+                                      
+                                    </li>
+                                  </ul>
+                                </div>
+                              );
+                            })
                           ) : (
                             <ul className="list-unstyled components text-secondary">
                               {" "}
@@ -267,13 +264,21 @@ export default class Dashboard extends Component {
                             </ul>
                           )}
                         </nav>
-                        {this.state.wishlists.length ? (
-                          <Content list={this.state.wishlists} />
+                        {/* content tab */}
+                      {/* {this.state.actualwishlist ? (
+                          <Content list={this.state.actualwishlist} />
+                        ) : this.state.wishlists.length  (
+                        <Content list={this.state.wishlists[0] } ) 
+                         } */}
+
+                         { ! Object.entries(this.state.actualwishlist).length ===0 ? (
+                          <Content list={this.state.actualwishlist} />
                         ) : (
-                          <h1 style={{ padding: "auto" }}>
-                            your product appears here{" "}
-                          </h1>
+                          <Content list={this.state.actualwishlist} />
                         )}
+
+
+
                       </div>
                     </div>
 
@@ -315,77 +320,6 @@ export default class Dashboard extends Component {
                             </li>
                           </ul>
                         </nav>
-                        
-                        <div id="body" className>
-                          <div className>
-                            <div className="container">
-                              <div className>
-                                <div className>
-                                  <ul className="nav ">
-                                    <li className="nav-item">
-                                      <a
-                                        className="nav-link active"
-                                        id="home-tab"
-                                        data-toggle="tab"
-                                        href="#home"
-                                        role="tab"
-                                        aria-controls="home"
-                                        aria-selected="false"
-                                      >
-                                        {" "}
-                                        <h4>product 1</h4>
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div className="col-md-12">
-                                  <table>
-                                    <tbody>
-                                      <tr>
-                                        <td
-                                          className="col-sm-10"
-                                          style={{ border: "2px solid red" }}
-                                        >
-                                          <div className="card">
-                                            <div className="card-body">
-                                              <div className="row">
-                                                <div
-                                                  style={{ height: "200px" }}
-                                                  className="col-6"
-                                                >
-                                                  <img
-                                                    style={{
-                                                      border: "2px solid black",
-                                                      height: "60px",
-                                                    }}
-                                                    src="./assets/img/bootstraper-logo.png"
-                                                    alt=""
-                                                  />
-                                                </div>
-                                                <div className="col-6">
-                                                  <label htmlFor="tex">
-                                                    description
-                                                  </label>
-                                                  <input type="text" />
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </td>
-                                        <td
-                                          className="col-sm-10"
-                                          style={{ border: "2px solid red" }}
-                                        ></td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>

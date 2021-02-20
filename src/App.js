@@ -3,6 +3,9 @@ import Login from "./container/Login";
 import Dashboard from "./components/dashboard";
 import Signup from "./container/signup";
 import { Component } from "react";
+import Productcontent from "./components/productcontent";
+import Wishlistcontent from "./components/wishlistContent"
+import productcontent from "./components/productcontent";
 
 class App extends Component {
   constructor(){
@@ -20,6 +23,8 @@ class App extends Component {
   render() {
     return (
       <div>
+        
+
         <BrowserRouter>
           <Switch>
             <Route exact path="/"
@@ -38,6 +43,13 @@ class App extends Component {
             <Route path="/signup">
               <Signup />
             </Route>
+            <Route path="/Wishlistcontent">
+              <Wishlistcontent />
+            </Route>
+            <Route path="/productcontent">
+              <Productcontent />
+            </Route>
+            
 
            
           </Switch>
