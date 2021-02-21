@@ -19,7 +19,7 @@ const tailLayout = {
 };
 
 
-class Content extends Component {
+class Productcontent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +30,7 @@ class Content extends Component {
   }
   formRef = React.createRef();
   componentDidMount() {
-     const id = this.props.list["_id"]
+     const id = this.props.list["wishlistname"]
     axios
       .get(`http://localhost:4000/product/wishlist/${id}`)
       .then((response) => {
@@ -314,4 +314,4 @@ const id =this.props.list["_id"]
   }
 }
 
-export default Content;
+export default Productcontent;

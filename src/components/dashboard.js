@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
+import Productcontent from "./Productcontent";
 import "antd/dist/antd.css";
 import { Modal, Button, Form, Input } from "antd";
 
@@ -26,8 +27,9 @@ export default class Dashboard extends Component {
     this.state = {
       actualUserid: "",
       actualwishlist: {},
+      actualproduct : {} , 
       wishlists: [],
-      profucts: {},
+      products: [],
       isModalVisible: false,
     };
   }
@@ -50,6 +52,18 @@ export default class Dashboard extends Component {
         console.log({ " error": error });
       });
   };
+  getProducts =(userid)=>{
+    axios.get(`http://localhost:4000/product/userid/${userid}`)
+    .then((response) => {
+      console.log(response.data)
+      this.setState({ products: response.data });
+      this.setState({ actualproduct: response.data[0]});
+      
+    })
+    .catch((error) => {
+      console.log({ " error": error });
+    });
+  };
   setwishlist = (name) => {
     axios
       .post("http://localhost:4000/wishlist/", {
@@ -69,9 +83,9 @@ export default class Dashboard extends Component {
   };
   componentDidMount() {
     const id = this.getActualuserid(document.cookie);
-    console.log(document.cookie);
     this.setState({ actualUserid: id });
     this.getWishlists(id);
+    this.getProducts(id);
   }
   showModal = () => {
     this.setState({ isModalVisible: true });
@@ -90,6 +104,9 @@ export default class Dashboard extends Component {
   handleClick = (element) => {
     this.setState({ actualwishlist: element });
   };
+  handleClickproduct = (element)=>{
+    this.setState({actualproduct : element})
+  }
 
   logout = () => {
     axios
@@ -270,6 +287,7 @@ export default class Dashboard extends Component {
                           <Content list={this.state.actualwishlist} />
                          }
                       </div>
+                   
                     </div>
 
                     {/* products tab */}
@@ -282,7 +300,7 @@ export default class Dashboard extends Component {
                     >
                       <div className="wrapper">
                         <nav id="sidebar">
-                          {/* <div
+                          <div
                             style={{
                               border: "2px solid #22a1f9",
                               borderRadius: "4px",
@@ -290,27 +308,63 @@ export default class Dashboard extends Component {
                             className="sidebar-header list-unstyled components text-secondary"
                           >
                             <li>
-                              <a style={{ color: "#22a1f9" }} href>
-                                <i
-                                  style={{ marginRight: "40px" }}
-                                  className="fas fa-plus"
-                                />{" "}
+                              <button onClick={this.addProduct} type="primary">
                                 Add Product
-                              </a>
+                              </button>
                             </li>
-                          </div> */}
-                          <ul
-                            style={{ padding: "15px" }}
-                            className="list-unstyled components text-secondary"
-                          >
-                            <li>
-                              <a href="dashboard.html">
-                                <i className="fas fa-" /> Product 1{" "}
-                              </a>
-                            </li>
-                          </ul>
+                          </div>
+
+                          {this.state.products.length ? (
+                            this.state.products.map((element) => {
+                              return (
+                                <div>
+                                  <ul
+                                    style={{ padding: "15px" }}
+                                    className="list-unstyled components text-secondary"
+                                  >
+                                    <li>
+                                      <button
+                                        onClick={() =>
+                                          this.handleClickproduct(element)
+                                        }
+                                      >
+                                        {element["productname"]}
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <ul className="list-unstyled components text-secondary">
+                              {" "}
+                              <li style={{ padding: "50px 25px" }}>
+                                <b> there are no products yet</b> <br />
+                                Add your first product{" "}
+                                <i className="fas fa-heart" />{" "}
+                              </li>
+                            </ul>
+                          )}
                         </nav>
+                        {/* content tab */}
+                        {/* {this.state.actualwishlist ? (
+                          <Content list={this.state.actualwishlist} />
+                        ) : this.state.wishlists.length  (
+                        <Content list={this.state.wishlists[0] } ) 
+                         } */}
+
+                        {/* {!Object.entries(this.state.actualwishlist).length ===
+                        0 ? (
+                          <Content list={this.state.actualwishlist} />
+                        ) : (
+                          <Content list={this.state.firstwishlist} />
+                        )} */}
+
+                        {
+                          <Productcontent list={this.state.actualproduct} />
+                         }
                       </div>
+                   
                     </div>
                   </div>
                 </div>
