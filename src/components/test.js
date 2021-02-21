@@ -5,19 +5,25 @@ class Content extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      somestyle :"",
       products: [],
     };
   }
   componentDidMount() {
-     const id = this.props.list["wishlistname"]
     axios
-      .get(`http://localhost:4000/product/wishlist/${id}`)
+      .get(`http://localhost:4000/product/wishlist/602daab37cde2937419232e5`)
       .then((response) => {
         this.setState({ products: response.data });
       })
       .catch((error) => {
         console.log({ error });
       });
+  }
+  listView =()=>{
+console.log('hello')
+  }
+  gridViews =()=>{
+    console.log('hello')
   }
   render() {
     return (
@@ -85,19 +91,18 @@ class Content extends Component {
                     </a>
                   </li>
                   <li className="nav-item ml-auto">
-                    <a  className="nav-link active">
+                    <button onClick={this.listView} className="nav-link active">
+                     
                       <i className="fas fa-list" /> List{" "}
-                    </a>
+                    </button>
                   </li>
                   <li className="nav-item ">
-                    <a
+                    <button onClick={this.gridViews} href="#" className="nav-link active">
                       
-                      href="#"
-                      className="nav-link"
-                    >
                       <i className="fas fa-th" /> Grid{" "}
-                    </a>
+                    </button>
                   </li>
+                  
                 </ul>
               </div>
               {/* content */}
@@ -113,42 +118,39 @@ class Content extends Component {
                   >
                     <div className="card">
                       <div className="card-body">
-                          {/* dynamique data */}
-                          <table className="table" style ={
-                            {width : "100%"}
-                          }>
+                        <div className="table-responsive">
+                          <table className="table">
                             <thead>
                               <tr>
-                                <th>Image</th>
+                                <th> Image </th>
                                 <th>Name </th>
-                                <th>description </th>
+                                <th>Description </th>
                                 <th>Status</th>
                                 <th>Price</th>
                               </tr>
                             </thead>
                             <tbody>
+                              {/* dynamique data */}
 
-                             { 
-                                  this.state.products.map((product) => {
-                                    if (product["status"] === "to buy") {
-                                      return (
-                                           <tr>
-        
-                                          <th> <img width="50" height="50" src=""/> </th>
-                                          <td> {product['productname']} </td>
-                                          <td>{product['description']}</td>
-                                          <td>{product['status']}</td>
-                                          <td> {product['productprice']} </td>
-                                        </tr>
-                                      );
-                                    }
-                                  })
-                                }
-                               
-                          </tbody>
+                              {this.state.products.map((product)=>{
+                                if( product['status'] ==="to buy" ){
+                                return(
+
+                                 <tr>
+                                  
+                                <th> <img width="50" height="50" src=""/> </th>
+                                <td> {product['productname']} </td>
+                                <td>{product['description']}</td>
+                                <td>{product['status']}</td>
+                                <td> {product['productprice']} </td>
+                              </tr>
+                                )
+                              }
+                              })}
+                            </tbody>
                           </table>
                         </div>
-                    
+                      </div>
                     </div>
                   </div>
                   {/* bought products */}
@@ -173,24 +175,19 @@ class Content extends Component {
                             </thead>
                             <tbody>
                               {/* dynamique data  */}
-                              {this.state.products.map((product) => {
-                                if (product["status"] === "bought")
-                                  return (
-                                    <tr>
-                                      <th>
-                                        {" "}
-                                        <img
-                                          width="40"
-                                          height="40"
-                                          src={product["imageurl"]}
-                                        />{" "}
-                                      </th>
-                                      <td> {product["productname"]} </td>
-                                      <td>{product["description"]}</td>
-                                      <td>{product["status"]}</td>
-                                      <td> {product["productprice"]} </td>
-                                    </tr>
-                                  );
+                              {this.state.products.map((product)=>{
+                                if( product['status'] ==="bought" )
+                                return(
+
+                                 <tr>
+                                  
+                                <th> <img width="40" height="40" src={product['imageurl']} /> </th>
+                                <td> {product['productname']} </td>
+                                <td>{product['description']}</td>
+                                <td>{product['status']}</td>
+                                <td> {product['productprice']} </td>
+                              </tr>
+                                )
                               })}
                             </tbody>
                           </table>

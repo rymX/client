@@ -17,7 +17,7 @@ export default class Login extends Component {
 
     axios
       .get(
-        `http://localhost:4000/user/login/username/${username}/password/${password}`
+        `http://localhost:4000/user/login/username/${username}/password/${password}`, { withCredentials: true }
       )
       .then((response) => {
         console.log(response);

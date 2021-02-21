@@ -3,8 +3,6 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
 import "antd/dist/antd.css";
-import { Link } from "react-router-dom";
-
 import { Modal, Button, Form, Input } from "antd";
 
 const layout = {
@@ -27,8 +25,7 @@ export default class Dashboard extends Component {
     super(props);
     this.state = {
       actualUserid: "",
-      actualwishlist : [],
-      firstwishlist : {},
+      actualwishlist: {},
       wishlists: [],
       profucts: {},
       isModalVisible: false,
@@ -46,6 +43,8 @@ export default class Dashboard extends Component {
       .get(`http://localhost:4000/wishlist/user/${id}`)
       .then((response) => {
         this.setState({ wishlists: response.data });
+        this.setState({ actualwishlist: response.data[0] });
+        
       })
       .catch((error) => {
         console.log({ " error": error });
@@ -70,6 +69,7 @@ export default class Dashboard extends Component {
   };
   componentDidMount() {
     const id = this.getActualuserid(document.cookie);
+    console.log(document.cookie);
     this.setState({ actualUserid: id });
     this.getWishlists(id);
   }
@@ -87,35 +87,24 @@ export default class Dashboard extends Component {
     this.setState({ isModalVisible: false });
     this.formRef.current.resetFields();
   };
-handleClick =(element) =>{
-  this.setState({actualwishlist : element})
+  handleClick = (element) => {
+    this.setState({ actualwishlist: element });
+  };
 
-}
-getFirstElement =(list)=>{
-  console.log('okay')
-  list.map((element , index)=>{
-    if (index === 0){
-      console.log(element)
-      return element ;
-    }
-  })
-}
-logout = ()=>{
-   axios
-      .get(
-        `http://localhost:4000/user/logout`
-      )
+  logout = () => {
+    axios
+      .get(`http://localhost:4000/user/logout`, { withCredentials: true })
       .then((response) => {
         console.log(response);
         if (response.data) {
-         // this.props.handelLogin(response.data);
-        this.props.history.push('/');
+          // this.props.handelLogin(response.data);
+          this.props.history.push("/");
         }
       })
       .catch((error) => {
         console.log({ " error": error });
       });
-}
+  };
   render() {
     return (
       <div className="wrapper">
@@ -159,10 +148,10 @@ logout = ()=>{
                       </a>
                     </li>
                     <li className="nav-item  ml-auto">
-                      <button onClick={this.logout} > logout</button>
+                      <button onClick={this.logout}> logout</button>
                     </li>
                     <li className="nav-item  ">
-                       <button> TND </button>
+                      <button> TND </button>
                     </li>
                   </ul>
 
@@ -232,22 +221,21 @@ logout = ()=>{
                           </Modal>
 
                           {this.state.wishlists.length ? (
-                            this.state.wishlists.map((element, index) => {
-                              
+                            this.state.wishlists.map((element) => {
                               return (
-                                
                                 <div>
                                   <ul
                                     style={{ padding: "15px" }}
                                     className="list-unstyled components text-secondary"
                                   >
                                     <li>
-                                      
-                                       <button onClick={ () => this.handleClick(element)}>
-                                       {element["wishlistname"]}
-                                       </button>
-                                       
-                                      
+                                      <button
+                                        onClick={() =>
+                                          this.handleClick(element)
+                                        }
+                                      >
+                                        {element["wishlistname"]}
+                                      </button>
                                     </li>
                                   </ul>
                                 </div>
@@ -265,20 +253,22 @@ logout = ()=>{
                           )}
                         </nav>
                         {/* content tab */}
-                      {/* {this.state.actualwishlist ? (
+                        {/* {this.state.actualwishlist ? (
                           <Content list={this.state.actualwishlist} />
                         ) : this.state.wishlists.length  (
                         <Content list={this.state.wishlists[0] } ) 
                          } */}
 
-                         { ! Object.entries(this.state.actualwishlist).length ===0 ? (
+                        {/* {!Object.entries(this.state.actualwishlist).length ===
+                        0 ? (
                           <Content list={this.state.actualwishlist} />
                         ) : (
+                          <Content list={this.state.firstwishlist} />
+                        )} */}
+
+                        {
                           <Content list={this.state.actualwishlist} />
-                        )}
-
-
-
+                         }
                       </div>
                     </div>
 
