@@ -26,7 +26,6 @@ function Signup(props)  {
       if (response.data){
         history.push('/');
       }
-      // history.push('/dashbordtunisieimmonilier');
     })
     .catch(error =>{
       console.log({" error":error})
@@ -38,7 +37,7 @@ function Signup(props)  {
           <div className="card">
             <div className="card-body text-center">
               <div className="mb-4">
-                <img className="brand" src="assets/img/bootstraper-logo.png" alt="bootstraper logo" />
+                <img className="brand" src="assets/img/logo.JPG" alt="bootstraper logo" />
               </div>
               <form onSubmit={handlesubmit}>
                 <div className="form-group text-left">

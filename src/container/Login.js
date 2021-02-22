@@ -22,7 +22,6 @@ export default class Login extends Component {
       .then((response) => {
         console.log(response);
         if (response.data) {
-         // this.props.handelLogin(response.data);
         this.props.history.push('/dashbord');
         }
       })
@@ -40,7 +39,7 @@ export default class Login extends Component {
                 <div className="mb-4">
                   <img
                     className="brand"
-                    src="assets/img/bootstraper-logo.png"
+                    src="assets/img/logo.JPG"
                     alt="bootstraper logo"
                   />
                 </div>

@@ -19,20 +19,19 @@ const tailLayout = {
 };
 
 
-class Content extends Component {
+class WishlistContent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       products: [],
-      isModalVisible : false ,
-      isModalVisible2 : false 
+      isModalVisible: false,
+      isModalVisible2: false
     };
   }
   formRef = React.createRef();
   componentDidMount() {
-     const id = this.props.list["_id"]
-    axios
-      .get(`http://localhost:4000/product/wishlist/${id}`)
+    const id = this.props.list["_id"]
+    axios.get(`http://localhost:4000/product/wishlist/${id}`)
       .then((response) => {
         this.setState({ products: response.data });
       })
@@ -43,39 +42,40 @@ class Content extends Component {
   showModal = () => {
     this.setState({ isModalVisible: true });
   };
- 
+
   onCancel = () => {
     this.setState({ isModalVisible: false });
     this.formRef.current.resetFields();
   };
   onFinish = (values) => {
-const id =this.props.list["_id"]
-    axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
+    const id = this.props.list["_id"]
+    axios.patch(`http://localhost:4000/wishlist`, { id: id, wishlistname: values.wishlistname })
       .then((response) => {
-        this.setState({ key: Math.random() });
+        // component should re-render
+        this.forceUpdate();
       })
       .catch((error) => {
         console.log({ error });
       });
-    //this.setwishlist(values.wishlistname);
     this.setState({ isModalVisible: false });
     this.formRef.current.resetFields();
   };
   showModal2 = () => {
     this.setState({ isModalVisible2: true });
   };
-  handleOk =()=>{
-    const id =this.props.list["_id"]
+  handleOk = () => {
+    const id = this.props.list["_id"]
     axios.delete(`http://localhost:4000/wishlist/id/${id}`)
       .then((response) => {
-    console.log('done')
-    this.setState({ isModalVisible2: false });
+        // component should re-render
+        this.forceUpdate();
+        this.setState({ isModalVisible2: false });
       })
       .catch((error) => {
         console.log({ error });
       });
-   }
-   handleCancel2 = () => {
+  }
+  handleCancel2 = () => {
     this.setState({ isModalVisible2: false });
   };
   render() {
@@ -99,64 +99,66 @@ const id =this.props.list["_id"]
               </a>
             </li>
             <li className="nav-item ml-auto">
-             
-                <Button onClick={this.showModal} type="primary">
+
+              <Button onClick={this.showModal} type="primary">
                 <i className="fas fa-edit" /> Edit
                               </Button>
 
-                              <Modal
-                            title="Edit wishlist "
-                            visible={this.state.isModalVisible}
-                            footer={null}
-                            onCancel={this.onCancel}
-                            focusTriggerAfterClose={false}
-                          >
-                            <Form
-                              {...layout}
-                              ref={this.formRef}
-                              name="control-ref"
-                              onFinish={this.onFinish}
-                            >
-                              <Form.Item
-                                name="wishlistname"
-                                label="wishlist name"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please input your wishlist name!",
-                                  },
-                                ]}
-                              >
-                                <Input />
-                              </Form.Item>
+                              {/* <button className="btn btn-outline-primary mb-2" onClick={this.showModal} type="primary">
+                <i className="fas fa-edit" /> Edit
+                              </button> */}
 
-                              <Form.Item {...tailLayout}>
-                                <Button
-                                  style={{ marginRight: "8px" }}
-                                  htmlType="button"
-                                  onClick={this.onCancel}
-                                >
-                                  Cancel
+              <Modal
+                title="Edit wishlist "
+                visible={this.state.isModalVisible}
+                footer={null}
+                onCancel={this.onCancel}
+                focusTriggerAfterClose={false}
+              >
+                <Form
+                  {...layout}
+                  ref={this.formRef}
+                  name="control-ref"
+                  onFinish={this.onFinish}
+                >
+                  <Form.Item
+                    name="wishlistname"
+                    label="wishlist name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your wishlist name!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item {...tailLayout}>
+                    <Button
+                      style={{ marginRight: "8px" }}
+                      htmlType="button"
+                      onClick={this.onCancel}
+                    >
+                      Cancel
                                 </Button>
-                                <Button type="primary" htmlType="submit">
-                                  Done
+                    <Button type="primary" htmlType="submit">
+                      Done
                                 </Button>
-                              </Form.Item>
-                            </Form>
-                          </Modal>
+                  </Form.Item>
+                </Form>
+              </Modal>
 
             </li>
             <li className="nav-item">
-              <a href="#" style={{ color: "red" }} className="nav-link active">
-                {" "}
-                
-
                 <Button type="primary" onClick={this.showModal2}>
-                <i className="fas fa-trash-alt" />  Delete
+                  <i className="fas fa-trash-alt" />  Delete
       </Button>
-      <Modal title="Are you sure to delete wishlist" visible={this.state.isModalVisible2} onOk={this.handleOk} onCancel={this.handleCancel2}>
-      </Modal>
-              </a>
+      {/* <button className="btn btn-outline-danger mb-2" type="primary" onClick={this.showModal2}>
+                  <i className="fas fa-trash-alt" />  Delete
+      </button> */}
+                <Modal title="Are you sure to delete wishlist" visible={this.state.isModalVisible2} onOk={this.handleOk} onCancel={this.handleCancel2}>
+                </Modal>
             </li>
           </ul>
           <div className="row">
@@ -191,13 +193,13 @@ const id =this.props.list["_id"]
                     </a>
                   </li>
                   <li className="nav-item ml-auto">
-                    <a  className="nav-link active">
+                    <a className="nav-link active">
                       <i className="fas fa-list" /> List{" "}
                     </a>
                   </li>
                   <li className="nav-item ">
                     <a
-                      
+
                       href="#"
                       className="nav-link"
                     >
@@ -219,42 +221,42 @@ const id =this.props.list["_id"]
                   >
                     <div className="card">
                       <div className="card-body">
-                          {/* dynamique data */}
-                          <table className="table" style ={
-                            {width : "100%"}
-                          }>
-                            <thead>
-                              <tr>
-                                <th>Image</th>
-                                <th>Name </th>
-                                <th>description </th>
-                                <th>Status</th>
-                                <th>Price</th>
-                              </tr>
-                            </thead>
-                            <tbody>
+                        {/* dynamique data */}
+                        <table className="table" style={
+                          { width: "100%" }
+                        }>
+                          <thead>
+                            <tr>
+                              <th>Image</th>
+                              <th>Name </th>
+                              <th>description </th>
+                              <th>Status</th>
+                              <th>Price</th>
+                            </tr>
+                          </thead>
+                          <tbody>
 
-                             { 
-                                  this.state.products.map((product) => {
-                                    if (product["status"] === "to buy") {
-                                      return (
-                                           <tr>
-        
-                                          <th> <img width="50" height="50" src=""/> </th>
-                                          <td> {product['productname']} </td>
-                                          <td>{product['description']}</td>
-                                          <td>{product['status']}</td>
-                                          <td> {product['productprice']} </td>
-                                        </tr>
-                                      );
-                                    }
-                                  })
+                            {
+                              this.state.products.map((product) => {
+                                if (product["status"] === "to buy") {
+                                  return (
+                                    <tr>
+
+                                      <th> <img width="50" height="50" src="" /> </th>
+                                      <td> {product['productname']} </td>
+                                      <td>{product['description']}</td>
+                                      <td>{product['status']}</td>
+                                      <td> {product['productprice']} </td>
+                                    </tr>
+                                  );
                                 }
-                               
+                              })
+                            }
+
                           </tbody>
-                          </table>
-                        </div>
-                    
+                        </table>
+                      </div>
+
                     </div>
                   </div>
                   {/* bought products */}
@@ -278,7 +280,7 @@ const id =this.props.list["_id"]
                               </tr>
                             </thead>
                             <tbody>
-                              {/* dynamique data  */}
+
                               {this.state.products.map((product) => {
                                 if (product["status"] === "bought")
                                   return (
@@ -314,4 +316,4 @@ const id =this.props.list["_id"]
   }
 }
 
-export default Content;
+export default WishlistContent;

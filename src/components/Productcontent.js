@@ -45,6 +45,7 @@ class Productcontent extends Component {
       isModalVisible0: false,
     };
   }
+  formRef = React.createRef();
   showModal = () => {
     this.setState({ isModalVisible: true });
   };
@@ -56,6 +57,7 @@ class Productcontent extends Component {
   };
   handleCancel0 = () => {
     this.setState({ isModalVisible0: false });
+    this.formRef.current.resetFields();
   };
   handleOk = () => {
     const id = this.props.list["_id"];

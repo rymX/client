@@ -1,14 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Sidebar from "./Sidebar";
-import Content from "./Content";
+import WishlistContent from "./WishlistContent";
 import Productcontent from "./Productcontent";
 import "antd/dist/antd.css";
 import { Modal, Button, Form } from "antd";
 import {
   Upload,
-  DatePicker,
-  Switch,
   Input,
   InputNumber,
   Select,
@@ -47,6 +44,7 @@ export default class Dashboard extends Component {
       image : {}
     };
   }
+  formRef = React.createRef();
    normFile = (e) => {
     console.log("Upload event:", e);
     console.log("e.file" , e.file);
@@ -134,7 +132,6 @@ export default class Dashboard extends Component {
         fd.append('owner', this.state.actualUserid);
 
 
-
     axios.post("http://localhost:4000/product/", {fd})
       .then((response) => {
         this.getProducts(this.state.actualUserid);
@@ -145,8 +142,7 @@ export default class Dashboard extends Component {
         this.setState({ isModalVisible0: false });
       });
       this.setState({ isModalVisible0: false });
-    
-    // this.formRef.current.resetFields();
+
   };
   onCancel = () => {
     this.setState({ isModalVisible: false });
@@ -164,11 +160,9 @@ export default class Dashboard extends Component {
   };
 
   logout = () => {
-    axios
-      .get(`http://localhost:4000/user/logout`, { withCredentials: true })
+    axios.get(`http://localhost:4000/user/logout`, { withCredentials: true })
       .then((response) => {
         if (response.data) {
-          // this.props.handelLogin(response.data);
           this.props.history.push("/");
         }
       })
@@ -219,7 +213,9 @@ export default class Dashboard extends Component {
                       </a>
                     </li>
                     <li className="nav-item  ml-auto">
-                      <button onClick={this.logout}> logout</button>
+
+                      <button className="btn btn-outline-dark mb-2" onClick={this.logout}> logout</button>
+
                     </li>
                     <li className="nav-item  ">
                       <button> TND </button>
@@ -300,7 +296,7 @@ export default class Dashboard extends Component {
                                     className="list-unstyled components text-secondary"
                                   >
                                     <li>
-                                      <button
+                                      <button className="btn btn-outline-secondary mb-2"
                                         onClick={() =>
                                           this.handleClick(element)
                                         }
@@ -323,21 +319,7 @@ export default class Dashboard extends Component {
                             </ul>
                           )}
                         </nav>
-                        {/* content tab */}
-                        {/* {this.state.actualwishlist ? (
-                          <Content list={this.state.actualwishlist} />
-                        ) : this.state.wishlists.length  (
-                        <Content list={this.state.wishlists[0] } ) 
-                         } */}
-
-                        {/* {!Object.entries(this.state.actualwishlist).length ===
-                        0 ? (
-                          <Content list={this.state.actualwishlist} />
-                        ) : (
-                          <Content list={this.state.firstwishlist} />
-                        )} */}
-
-                        {<Content list={this.state.actualwishlist} />}
+                        {<WishlistContent list={this.state.actualwishlist} />}
                       </div>
                     </div>
 
@@ -512,20 +494,6 @@ export default class Dashboard extends Component {
                             </ul>
                           )}
                         </nav>
-                        {/* content tab */}
-                        {/* {this.state.actualwishlist ? (
-                          <Content list={this.state.actualwishlist} />
-                        ) : this.state.wishlists.length  (
-                        <Content list={this.state.wishlists[0] } ) 
-                         } */}
-
-                        {/* {!Object.entries(this.state.actualwishlist).length ===
-                        0 ? (
-                          <Content list={this.state.actualwishlist} />
-                        ) : (
-                          <Content list={this.state.firstwishlist} />
-                        )} */}
-
                         {
                           <Productcontent
                             list={this.state.actualproduct}
