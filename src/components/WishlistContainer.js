@@ -242,7 +242,7 @@ class WishlistContent extends Component {
                                   return (
                                     <tr>
 
-                                      <th> <img width="50" height="50" src="" /> </th>
+                                      <th> <img width="50" height="50" src={product["imageurl"]} /> </th>
                                       <td> {product['productname']} </td>
                                       <td>{product['description']}</td>
                                       <td>{product['status']}</td>

@@ -13,13 +13,11 @@ export default class Login extends Component {
     e.preventDefault();
     const username = e.target.elements.username.value;
     const password = e.target.elements.password.value;
-    console.log(username, password);
 
     axios.get(
         `http://localhost:4000/user/login/username/${username}/password/${password}`, { withCredentials: true }
       )
       .then((response) => {
-        console.log(response);
         if (response.data) {
         this.props.history.push('/dashbord');
         }

@@ -64,12 +64,12 @@ class Productcontent extends Component {
     axios
       .delete(`http://localhost:4000/product/id/${id}`)
       .then((response) => {
-        console.log("done");
-        this.setState({ isModalVisible: false });
+       this.props.action();
       })
       .catch((error) => {
         console.log({ error });
       });
+      this.setState({ isModalVisible: false });
   };
   onFinish = (values) => {
       console.log(values)

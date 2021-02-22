@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
-import WishlistContent from "./WishlistContent";
-import Productcontent from "./Productcontent";
+import WishlistContent from "./WishlistContainer";
+import Productcontent from "./Productcontainer";
 import "antd/dist/antd.css";
 import { Modal, Button, Form } from "antd";
-import {
-  Upload,
-  Input,
-  InputNumber,
-  Select,
-  TextArea,
-} from "antd";
+import { Upload, Input, InputNumber, Select, TextArea } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import _ from "lodash";
 const { Option } = Select;
 
 const layout = {
@@ -29,31 +24,27 @@ const tailLayout = {
   },
 };
 
-
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       actualUserid: "",
-      actualwishlist: {},
+      actualwishlist: new Object(),
       actualproduct: {},
       wishlists: [],
       products: [],
       isModalVisible: false,
       isModalVisible0: false,
-      image : {}
+      file: {},
     };
   }
   formRef = React.createRef();
-   normFile = (e) => {
-    console.log("Upload event:", e);
-    console.log("e.file" , e.file);
-    console.log("e.file.originFileObj" ,e.file.originFileObj)
-  this.setState({image : e.file.originFileObj})
+  normFile = (e) => {
+    this.setState({ file: e.file });
     if (Array.isArray(e)) {
       return e;
     }
-  
+
     return e && e.fileList;
   };
   formRef = React.createRef();
@@ -121,28 +112,26 @@ export default class Dashboard extends Component {
   };
   onFinish0 = (values) => {
     const fd = new FormData();
-        fd.append('productimg',this.state.image);
-        fd.append('productname', this.values.name);
-        fd.append('productprice', this.values.price);
-        fd.append('currency', this.values.currency);
-        fd.append('description', this.values.description);
-        fd.append('wishlistid', this.values.wishlist);
-        fd.append('status', this.values.Status);
-        fd.append('productprice', this.values.price);
-        fd.append('owner', this.state.actualUserid);
+    fd.append("productimg", this.state.file.originFileObj);
+    fd.append("productname", values.productname);
+    fd.append("productprice", values.price);
+    fd.append("currency", values.currency);
+    fd.append("description", values.description);
+    fd.append("wishlistid", values.wishlist);
+    fd.append("status", values.Status);
+    fd.append("owner", this.state.actualUserid);
 
-
-    axios.post("http://localhost:4000/product/", {fd})
+    axios
+      .post("http://localhost:4000/product/", fd)
       .then((response) => {
+        console.log(response);
         this.getProducts(this.state.actualUserid);
-        this.setState({ isModalVisible0: false });
       })
       .catch((error) => {
         console.log({ error });
         this.setState({ isModalVisible0: false });
       });
-      this.setState({ isModalVisible0: false });
-
+    this.setState({ isModalVisible0: false });
   };
   onCancel = () => {
     this.setState({ isModalVisible: false });
@@ -160,7 +149,8 @@ export default class Dashboard extends Component {
   };
 
   logout = () => {
-    axios.get(`http://localhost:4000/user/logout`, { withCredentials: true })
+    axios
+      .get(`http://localhost:4000/user/logout`, { withCredentials: true })
       .then((response) => {
         if (response.data) {
           this.props.history.push("/");
@@ -213,9 +203,13 @@ export default class Dashboard extends Component {
                       </a>
                     </li>
                     <li className="nav-item  ml-auto">
-
-                      <button className="btn btn-outline-dark mb-2" onClick={this.logout}> logout</button>
-
+                      <button
+                        className="btn btn-outline-dark mb-2"
+                        onClick={this.logout}
+                      >
+                        {" "}
+                        logout
+                      </button>
                     </li>
                     <li className="nav-item  ">
                       <button> TND </button>
@@ -228,26 +222,30 @@ export default class Dashboard extends Component {
                       className="tab-pane fade active show"
                       id="wishlists"
                       role="tabpanel"
-                      aria-labelledby="wichlist-tab"
                     >
                       <div className="wrapper">
                         <nav id="sidebar">
-                          <div style={{  width: "245px", height: "50px", overflow: "auto" ,textAlign: "center" }}
-                          
+                          <div
+                            style={{
+    
+                              width: "245px",
+                              height: "500px",
+                              textAlign: "center",
+                              overflow: "auto",
+                            }}
                           >
-                            <ul
-                                
-                                    className="list-unstyled components text-secondary"
-                                  >
-                                    <li>
-                                     
-                                      <button style={{  width: "120px" }} className="btn btn-outline-danger mb-2" onClick={this.showModal} type="primary">
-                                Add Wishlist
-                              </button>
-                                    </li>
-                                  </ul>
+                            <ul className="list-unstyled components text-secondary">
+                              <li>
+                                <button
+                                  style={{ width: "120px" }}
+                                  className="btn btn-primary mb-2"
+                                  onClick={this.showModal}
+                                  type="primary"
+                                >
+                                  Add Wishlist
+                                </button>
+                              </li>
                            
-                          </div>
 
                           <Modal
                             title="Add wishlist "
@@ -290,16 +288,14 @@ export default class Dashboard extends Component {
                             </Form>
                           </Modal>
 
-                          {/* {this.state.wishlists.length ? (
+                          {this.state.wishlists.length ? (
                             this.state.wishlists.map((element) => {
                               return (
-                                <div style={{  width: "110px", height: "110px", overflow: "auto" }}>
-                                  <ul
-                                    style={{ padding: "15px" }}
-                                    className="list-unstyled components text-secondary"
-                                  >
+                                
                                     <li>
-                                      <button className="btn btn-outline-secondary mb-2"
+                                      <button
+                                        className="btn btn-outline-primary mb-2"
+                                        style={{ width: "120px" }}
                                         onClick={() =>
                                           this.handleClick(element)
                                         }
@@ -307,8 +303,7 @@ export default class Dashboard extends Component {
                                         {element["wishlistname"]}
                                       </button>
                                     </li>
-                                  </ul>
-                                </div>
+                                
                               );
                             })
                           ) : (
@@ -320,101 +315,15 @@ export default class Dashboard extends Component {
                                 <i className="fas fa-heart" />{" "}
                               </li>
                             </ul>
-                          )} */}
-                           <div style={{  width: "245px", height: "580px", overflow: "auto" ,textAlign: "center" }}>
-                                  <ul
-                                    style={{ padding: "15px" }}
-                                    className="list-unstyled components text-secondary"
-                                  >
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                      style={{  width: "120px" }}
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                       
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-outline-secondary mb-2"
-                                        
-                                      >
-                                       list 1 
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-
+                          )}
+                           </ul>
+                          </div>
                         </nav>
-                        {<WishlistContent list={this.state.actualwishlist} />}
+                        {_.isEmpty(this.state.actualwishlist) ? (
+                          <h1> you have no wishlists yet </h1>
+                        ) : (
+                          <WishlistContent list={this.state.actualwishlist} />
+                        )}
                       </div>
                     </div>
 
@@ -430,15 +339,22 @@ export default class Dashboard extends Component {
                         <nav id="sidebar">
                           <div
                             style={{
-                              border: "2px solid #22a1f9",
-                              borderRadius: "4px",
+                              
+                              width: "245px",
+                              height: "500px",
+                              textAlign: "center",
                             }}
-                            className="sidebar-header list-unstyled components text-secondary"
+                            // className="sidebar-header list-unstyled components text-secondary"
                           >
+                            <ul className="list-unstyled components text-secondary">
                             <li>
-                              <Button type="primary" onClick={this.showModal0}>
+                              <button 
+                              style={{ width: "120px" }}
+                              className="btn btn-primary mb-2"type="primary" onClick={this.showModal0}>
                                 Add Product
-                              </Button>
+                              </button>
+                              </li>
+                             
                               <Modal
                                 title="Add Product"
                                 visible={this.state.isModalVisible0}
@@ -456,7 +372,7 @@ export default class Dashboard extends Component {
                                     label="image"
                                     valuePropName="fileList"
                                     getValueFromEvent={this.normFile}
-                                    extra="longgggggggggggggggggg"
+                                    required
                                   >
                                     <Upload
                                       name="logo"
@@ -470,15 +386,17 @@ export default class Dashboard extends Component {
                                   </Form.Item>
                                   <Form.Item
                                     label="Name"
-                                    name="name"
+                                    name="productname"
                                     required
                                   >
                                     <Input placeholder="" />
                                   </Form.Item>
-                                  <Form.Item label="Price">
-                                    <Form.Item name="price" noStyle>
-                                      <InputNumber placeholder="" />
-                                    </Form.Item>
+                                  <Form.Item
+                                    label="Price"
+                                    name="price"
+                                    required
+                                  >
+                                    <Input placeholder="" />
                                   </Form.Item>
                                   <Form.Item
                                     name="currency"
@@ -506,19 +424,12 @@ export default class Dashboard extends Component {
                                     name="wishlist"
                                     label="wishlist"
                                     hasFeedback
-                                    rules={[
-                                      {
-                                        required: true,
-                                      },
-                                    ]}
+                            
                                   >
                                     <Select placeholder="">
                                       {this.state.wishlists.map((element) => {
                                         return (
-                                          <Option
-                                           value={element["_id"]}
-                                  
-                                          >
+                                          <Option value={element["_id"]}>
                                             {" "}
                                             {element["wishlistname"]}{" "}
                                           </Option>
@@ -554,19 +465,26 @@ export default class Dashboard extends Component {
                                   </Form.Item>
                                 </Form>
                               </Modal>
-                            </li>
-                          </div>
+          
 
                           {this.state.products.length ? (
                             this.state.products.map((element) => {
                               return (
-                                <div style={{  width: "110px", height: "210px", overflow: "auto" }}>
+                                <div
+                                  style={{
+                                    width: "110px",
+                                    height: "210px",
+                                    overflow: "auto",
+                                  }}
+                                >
                                   <ul
                                     style={{ padding: "15px" }}
                                     className="list-unstyled components text-secondary"
                                   >
                                     <li>
                                       <button
+                                      className="btn btn-outline-primary mb-2"
+                                      style={{ width: "120px" }}
                                         onClick={() =>
                                           this.handleClickproduct(element)
                                         }
@@ -588,13 +506,20 @@ export default class Dashboard extends Component {
                               </li>
                             </ul>
                           )}
+                           </ul>
+                              </div>
                         </nav>
-                        {
+                        {/* {
+                          
+                        } */}
+                        {_.isEmpty(this.state.actualproduct) ? (
+                          <h1> you have no product yet </h1>
+                        ) : (
                           <Productcontent
                             list={this.state.actualproduct}
                             wishlists={this.state.wishlists}
                           />
-                        }
+                        )}
                       </div>
                     </div>
                   </div>
