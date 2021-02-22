@@ -232,18 +232,21 @@ export default class Dashboard extends Component {
                     >
                       <div className="wrapper">
                         <nav id="sidebar">
-                          <div
-                            style={{
-                              border: "2px solid #22a1f9",
-                              borderRadius: "4px",
-                            }}
-                            className="sidebar-header list-unstyled components text-secondary"
+                          <div style={{  width: "245px", height: "50px", overflow: "auto" ,textAlign: "center" }}
+                          
                           >
-                            <li>
-                              <Button onClick={this.showModal} type="primary">
+                            <ul
+                                
+                                    className="list-unstyled components text-secondary"
+                                  >
+                                    <li>
+                                     
+                                      <button style={{  width: "120px" }} className="btn btn-outline-danger mb-2" onClick={this.showModal} type="primary">
                                 Add Wishlist
-                              </Button>
-                            </li>
+                              </button>
+                                    </li>
+                                  </ul>
+                           
                           </div>
 
                           <Modal
@@ -287,10 +290,10 @@ export default class Dashboard extends Component {
                             </Form>
                           </Modal>
 
-                          {this.state.wishlists.length ? (
+                          {/* {this.state.wishlists.length ? (
                             this.state.wishlists.map((element) => {
                               return (
-                                <div>
+                                <div style={{  width: "110px", height: "110px", overflow: "auto" }}>
                                   <ul
                                     style={{ padding: "15px" }}
                                     className="list-unstyled components text-secondary"
@@ -317,7 +320,99 @@ export default class Dashboard extends Component {
                                 <i className="fas fa-heart" />{" "}
                               </li>
                             </ul>
-                          )}
+                          )} */}
+                           <div style={{  width: "245px", height: "580px", overflow: "auto" ,textAlign: "center" }}>
+                                  <ul
+                                    style={{ padding: "15px" }}
+                                    className="list-unstyled components text-secondary"
+                                  >
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                      style={{  width: "120px" }}
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                       
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button className="btn btn-outline-secondary mb-2"
+                                        
+                                      >
+                                       list 1 
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </div>
+
                         </nav>
                         {<WishlistContent list={this.state.actualwishlist} />}
                       </div>
@@ -465,7 +560,7 @@ export default class Dashboard extends Component {
                           {this.state.products.length ? (
                             this.state.products.map((element) => {
                               return (
-                                <div>
+                                <div style={{  width: "110px", height: "210px", overflow: "auto" }}>
                                   <ul
                                     style={{ padding: "15px" }}
                                     className="list-unstyled components text-secondary"

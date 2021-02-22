@@ -15,8 +15,7 @@ export default class Login extends Component {
     const password = e.target.elements.password.value;
     console.log(username, password);
 
-    axios
-      .get(
+    axios.get(
         `http://localhost:4000/user/login/username/${username}/password/${password}`, { withCredentials: true }
       )
       .then((response) => {
@@ -27,6 +26,9 @@ export default class Login extends Component {
       })
       .catch((error) => {
         console.log({ " error": error });
+        if (error.response.data.message === "auth failed") {
+          window.alert("Incorrect username or password ");
+        }
       });
   };
   render() {
