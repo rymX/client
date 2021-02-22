@@ -73,15 +73,15 @@ class Productcontent extends Component {
   };
   onFinish = (values) => {
       console.log(values)
-    // const id =this.props.list["_id"]
-    //     axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
-    //       .then((response) => {
-    //         this.setState({ key: Math.random() });
-    //       })
-    //       .catch((error) => {
-    //         console.log({ error });
-    //       });
-        //this.setwishlist(values.wishlistname);
+    const id =this.props.list["_id"]
+        axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
+          .then((response) => {
+            this.setState({ key: Math.random() });
+          })
+          .catch((error) => {
+            console.log({ error });
+          });
+        this.setwishlist(values.wishlistname);
         this.setState({ isModalVisible0: false });
       };
 
@@ -151,9 +151,10 @@ class Productcontent extends Component {
             </div>
           </div>
           <div className="col-md-2">
-            <Button type="primary" onClick={this.showModal0}>
-              <i className="fas fa-edit" /> Edit
-            </Button>
+           
+            <button style={{width :"81px"}} onClick={this.showModal0} type="primary" class="btn btn-primary">
+              <i class="fas fa-edit"></i> Edit</button>
+
             <Modal
               title="Edit Product"
               visible={this.state.isModalVisible0}
@@ -260,9 +261,9 @@ class Productcontent extends Component {
               </Form>
             </Modal>
 
-            <Button type="primary" onClick={this.showModal}>
-              <i className="fas fa-trash-alt" /> Delete
-            </Button>
+            
+            <button style={{border : "none" , width : "81px"}} onClick={this.showModal} class="btn btn-danger"><i class="fas fa-trash-alt"></i>Delete</button>
+
             <Modal
               title="Are you sure to delete this product"
               visible={this.state.isModalVisible}

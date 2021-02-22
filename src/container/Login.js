@@ -23,7 +23,7 @@ export default class Login extends Component {
         }
       })
       .catch((error) => {
-        console.log({ " error": error });
+        console.log({ " error": error });  
         if (error.response.data.message === "auth failed") {
           window.alert("Incorrect username or password ");
         }

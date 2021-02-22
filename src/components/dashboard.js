@@ -37,6 +37,10 @@ export default class Dashboard extends Component {
       isModalVisible0: false,
       file: {},
     };
+    this.forceReloder = this.forceReloder.bind(this);
+  }
+  forceReloder=()=>{
+    this.forceUpdate();
   }
   formRef = React.createRef();
   normFile = (e) => {
@@ -322,7 +326,7 @@ export default class Dashboard extends Component {
                         {_.isEmpty(this.state.actualwishlist) ? (
                           <h1> you have no wishlists yet </h1>
                         ) : (
-                          <WishlistContent list={this.state.actualwishlist} />
+                          <WishlistContent list={this.state.actualwishlist} forceReloder={ this.forceReloder}/>
                         )}
                       </div>
                     </div>
@@ -470,17 +474,6 @@ export default class Dashboard extends Component {
                           {this.state.products.length ? (
                             this.state.products.map((element) => {
                               return (
-                                <div
-                                  style={{
-                                    width: "110px",
-                                    height: "210px",
-                                    overflow: "auto",
-                                  }}
-                                >
-                                  <ul
-                                    style={{ padding: "15px" }}
-                                    className="list-unstyled components text-secondary"
-                                  >
                                     <li>
                                       <button
                                       className="btn btn-outline-primary mb-2"
@@ -492,8 +485,6 @@ export default class Dashboard extends Component {
                                         {element["productname"]}
                                       </button>
                                     </li>
-                                  </ul>
-                                </div>
                               );
                             })
                           ) : (

@@ -67,8 +67,8 @@ class WishlistContent extends Component {
     const id = this.props.list["_id"]
     axios.delete(`http://localhost:4000/wishlist/id/${id}`)
       .then((response) => {
-        // component should re-render
-        this.forceUpdate();
+        this.props.forceReloder();
+       // this.forceUpdate();
         this.setState({ isModalVisible2: false });
       })
       .catch((error) => {
@@ -99,14 +99,8 @@ class WishlistContent extends Component {
               </a>
             </li>
             <li className="nav-item ml-auto">
+            <button onClick={this.showModal} type="primary" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</button>
 
-              <Button onClick={this.showModal} type="primary">
-                <i className="fas fa-edit" /> Edit
-                              </Button>
-
-                              {/* <button className="btn btn-outline-primary mb-2" onClick={this.showModal} type="primary">
-                <i className="fas fa-edit" /> Edit
-                              </button> */}
 
               <Modal
                 title="Edit wishlist "
@@ -151,12 +145,8 @@ class WishlistContent extends Component {
 
             </li>
             <li className="nav-item">
-                <Button type="primary" onClick={this.showModal2}>
-                  <i className="fas fa-trash-alt" />  Delete
-      </Button>
-      {/* <button className="btn btn-outline-danger mb-2" type="primary" onClick={this.showModal2}>
-                  <i className="fas fa-trash-alt" />  Delete
-      </button> */}
+      <button style={{border : "none"}} onClick={this.showModal2} class="btn btn-danger"><i class="fas fa-trash-alt"></i>Delete</button>
+  
                 <Modal title="Are you sure to delete wishlist" visible={this.state.isModalVisible2} onOk={this.handleOk} onCancel={this.handleCancel2}>
                 </Modal>
             </li>

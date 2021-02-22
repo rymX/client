@@ -29,6 +29,9 @@ function Signup(props)  {
     })
     .catch(error =>{
       console.log({" error":error})
+      if (error.response.data.message === "username  already exists") {
+        window.alert("username  already exists");
+      }
     })
   }
     return (
