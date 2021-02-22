@@ -4,7 +4,18 @@ import Sidebar from "./Sidebar";
 import Content from "./Content";
 import Productcontent from "./Productcontent";
 import "antd/dist/antd.css";
-import { Modal, Button, Form, Input } from "antd";
+import { Modal, Button, Form } from "antd";
+import {
+  Upload,
+  DatePicker,
+  Switch,
+  Input,
+  InputNumber,
+  Select,
+  TextArea,
+} from "antd";
+import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+const { Option } = Select;
 
 const layout = {
   labelCol: {
@@ -21,18 +32,32 @@ const tailLayout = {
   },
 };
 
+
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       actualUserid: "",
       actualwishlist: {},
-      actualproduct : {} , 
+      actualproduct: {},
       wishlists: [],
       products: [],
       isModalVisible: false,
+      isModalVisible0: false,
+      image : {}
     };
   }
+   normFile = (e) => {
+    console.log("Upload event:", e);
+    console.log("e.file" , e.file);
+    console.log("e.file.originFileObj" ,e.file.originFileObj)
+  this.setState({image : e.file.originFileObj})
+    if (Array.isArray(e)) {
+      return e;
+    }
+  
+    return e && e.fileList;
+  };
   formRef = React.createRef();
   getActualuserid = (cookies) => {
     return cookies.split("; ").reduce((r, v) => {
@@ -46,23 +71,21 @@ export default class Dashboard extends Component {
       .then((response) => {
         this.setState({ wishlists: response.data });
         this.setState({ actualwishlist: response.data[0] });
-        
       })
       .catch((error) => {
         console.log({ " error": error });
       });
   };
-  getProducts =(userid)=>{
-    axios.get(`http://localhost:4000/product/userid/${userid}`)
-    .then((response) => {
-      console.log(response.data)
-      this.setState({ products: response.data });
-      this.setState({ actualproduct: response.data[0]});
-      
-    })
-    .catch((error) => {
-      console.log({ " error": error });
-    });
+  getProducts = (userid) => {
+    axios
+      .get(`http://localhost:4000/product/userid/${userid}`)
+      .then((response) => {
+        this.setState({ products: response.data });
+        this.setState({ actualproduct: response.data[0] });
+      })
+      .catch((error) => {
+        console.log({ " error": error });
+      });
   };
   setwishlist = (name) => {
     axios
@@ -71,7 +94,6 @@ export default class Dashboard extends Component {
         owner: this.state.actualUserid,
       })
       .then((response) => {
-        console.log(response);
         this.getWishlists(this.state.actualUserid);
       })
       .catch((error) => {
@@ -90,29 +112,61 @@ export default class Dashboard extends Component {
   showModal = () => {
     this.setState({ isModalVisible: true });
   };
+  showModal0 = () => {
+    this.setState({ isModalVisible0: true });
+  };
 
   onFinish = (values) => {
     this.setwishlist(values.wishlistname);
     this.setState({ isModalVisible: false });
     this.formRef.current.resetFields();
   };
+  onFinish0 = (values) => {
+    const fd = new FormData();
+        fd.append('productimg',this.state.image);
+        fd.append('productname', this.values.name);
+        fd.append('productprice', this.values.price);
+        fd.append('currency', this.values.currency);
+        fd.append('description', this.values.description);
+        fd.append('wishlistid', this.values.wishlist);
+        fd.append('status', this.values.Status);
+        fd.append('productprice', this.values.price);
+        fd.append('owner', this.state.actualUserid);
 
+
+
+    axios.post("http://localhost:4000/product/", {fd})
+      .then((response) => {
+        this.getProducts(this.state.actualUserid);
+        this.setState({ isModalVisible0: false });
+      })
+      .catch((error) => {
+        console.log({ error });
+        this.setState({ isModalVisible0: false });
+      });
+      this.setState({ isModalVisible0: false });
+    
+    // this.formRef.current.resetFields();
+  };
   onCancel = () => {
     this.setState({ isModalVisible: false });
+    this.formRef.current.resetFields();
+  };
+  handleCancel0 = () => {
+    this.setState({ isModalVisible0: false });
     this.formRef.current.resetFields();
   };
   handleClick = (element) => {
     this.setState({ actualwishlist: element });
   };
-  handleClickproduct = (element)=>{
-    this.setState({actualproduct : element})
-  }
+  handleClickproduct = (element) => {
+    this.setState({ actualproduct: element });
+  };
 
   logout = () => {
     axios
       .get(`http://localhost:4000/user/logout`, { withCredentials: true })
       .then((response) => {
-        console.log(response);
         if (response.data) {
           // this.props.handelLogin(response.data);
           this.props.history.push("/");
@@ -283,11 +337,8 @@ export default class Dashboard extends Component {
                           <Content list={this.state.firstwishlist} />
                         )} */}
 
-                        {
-                          <Content list={this.state.actualwishlist} />
-                         }
+                        {<Content list={this.state.actualwishlist} />}
                       </div>
-                   
                     </div>
 
                     {/* products tab */}
@@ -308,9 +359,124 @@ export default class Dashboard extends Component {
                             className="sidebar-header list-unstyled components text-secondary"
                           >
                             <li>
-                              <button onClick={this.addProduct} type="primary">
+                              <Button type="primary" onClick={this.showModal0}>
                                 Add Product
-                              </button>
+                              </Button>
+                              <Modal
+                                title="Add Product"
+                                visible={this.state.isModalVisible0}
+                                footer={null}
+                                onCancel={this.handleCancel0}
+                              >
+                                <Form
+                                  {...layout}
+                                  ref={this.formRef}
+                                  name="control-ref"
+                                  onFinish={this.onFinish0}
+                                >
+                                  <Form.Item
+                                    name="upload"
+                                    label="image"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={this.normFile}
+                                    extra="longgggggggggggggggggg"
+                                  >
+                                    <Upload
+                                      name="logo"
+                                      action="/upload.do"
+                                      listType="picture"
+                                    >
+                                      <Button icon={<UploadOutlined />}>
+                                        Click to upload
+                                      </Button>
+                                    </Upload>
+                                  </Form.Item>
+                                  <Form.Item
+                                    label="Name"
+                                    name="name"
+                                    required
+                                  >
+                                    <Input placeholder="" />
+                                  </Form.Item>
+                                  <Form.Item label="Price">
+                                    <Form.Item name="price" noStyle>
+                                      <InputNumber placeholder="" />
+                                    </Form.Item>
+                                  </Form.Item>
+                                  <Form.Item
+                                    name="currency"
+                                    label="currency"
+                                    hasFeedback
+                                    rules={[
+                                      {
+                                        required: true,
+                                      },
+                                    ]}
+                                  >
+                                    <Select placeholder="">
+                                      <Option value="TND">TND</Option>
+                                      <Option value="EURO">Euro</Option>
+                                      <Option value="Dollar">Dollar</Option>
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item
+                                    name={["description"]}
+                                    label="Description"
+                                  >
+                                    <Input.TextArea placeholder="" />
+                                  </Form.Item>
+                                  <Form.Item
+                                    name="wishlist"
+                                    label="wishlist"
+                                    hasFeedback
+                                    rules={[
+                                      {
+                                        required: true,
+                                      },
+                                    ]}
+                                  >
+                                    <Select placeholder="">
+                                      {this.state.wishlists.map((element) => {
+                                        return (
+                                          <Option
+                                           value={element["_id"]}
+                                  
+                                          >
+                                            {" "}
+                                            {element["wishlistname"]}{" "}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item
+                                    name="Status"
+                                    label="Status"
+                                    hasFeedback
+                                    rules={[
+                                      {
+                                        required: true,
+                                      },
+                                    ]}
+                                  >
+                                    <Select placeholder="">
+                                      <Option value="to buy">To buy</Option>
+                                      <Option value="bought">Bought</Option>
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item {...tailLayout}>
+                                    <Button type="primary" htmlType="submit">
+                                      Submit
+                                    </Button>
+                                    <Button
+                                      htmlType="button"
+                                      onClick={this.handleCancel0}
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </Form.Item>
+                                </Form>
+                              </Modal>
                             </li>
                           </div>
 
@@ -361,10 +527,12 @@ export default class Dashboard extends Component {
                         )} */}
 
                         {
-                          <Productcontent list={this.state.actualproduct} />
-                         }
+                          <Productcontent
+                            list={this.state.actualproduct}
+                            wishlists={this.state.wishlists}
+                          />
+                        }
                       </div>
-                   
                     </div>
                   </div>
                 </div>

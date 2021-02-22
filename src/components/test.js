@@ -1,208 +1,249 @@
-import axios from "axios";
-import React, { Component } from "react";
+import {
+  Form,
+  Select,
+  InputNumber,
+  Switch,
+  Radio,
+  Slider,
+  Button,
+  Upload,
+  Rate,
+  Checkbox,
+  Row,
+  Col,
+} from 'antd';
+import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
+const { Option } = Select;
+const formItemLayout = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 14,
+  },
+};
 
-class Content extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      somestyle :"",
-      products: [],
-    };
-  }
-  componentDidMount() {
-    axios
-      .get(`http://localhost:4000/product/wishlist/602daab37cde2937419232e5`)
-      .then((response) => {
-        this.setState({ products: response.data });
-      })
-      .catch((error) => {
-        console.log({ error });
-      });
-  }
-  listView =()=>{
-console.log('hello')
-  }
-  gridViews =()=>{
-    console.log('hello')
-  }
-  render() {
-    return (
-      <div id="body">
-        <div className="container">
-          {/* header */}
+const normFile = (e) => {
+  console.log('Upload event:', e);
 
-          <ul className="nav">
-            <li className="nav-item">
-              <a
-                className="nav-link active"
-                id="home-tab"
-                data-toggle="tab"
-                href="#home"
-                role="tab"
-                aria-controls="home"
-                aria-selected="false"
+  if (Array.isArray(e)) {
+    return e;
+  }
+
+  return e && e.fileList;
+};
+
+const Demo = () => {
+  const onFinish = (values) => {
+    console.log('Received values of form: ', values);
+  };
+
+  return (
+    <Form
+      name="validate_other"
+      {...formItemLayout}
+      onFinish={onFinish}
+      initialValues={{
+        ['input-number']: 3,
+        ['checkbox-group']: ['A', 'B'],
+        rate: 3.5,
+      }}
+    >
+      <Form.Item label="Plain Text">
+        <span className="ant-form-text">China</span>
+      </Form.Item>
+      <Form.Item
+        name="select"
+        label="Select"
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Please select your country!',
+          },
+        ]}
+      >
+        <Select placeholder="Please select a country">
+          <Option value="china">China</Option>
+          <Option value="usa">U.S.A</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="select-multiple"
+        label="Select[multiple]"
+        rules={[
+          {
+            required: true,
+            message: 'Please select your favourite colors!',
+            type: 'array',
+          },
+        ]}
+      >
+        <Select mode="multiple" placeholder="Please select favourite colors">
+          <Option value="red">Red</Option>
+          <Option value="green">Green</Option>
+          <Option value="blue">Blue</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item label="InputNumber">
+        <Form.Item name="input-number" noStyle>
+          <InputNumber min={1} max={10} />
+        </Form.Item>
+        <span className="ant-form-text"> machines</span>
+      </Form.Item>
+
+      <Form.Item name="switch" label="Switch" valuePropName="checked">
+        <Switch />
+      </Form.Item>
+
+      <Form.Item name="slider" label="Slider">
+        <Slider
+          marks={{
+            0: 'A',
+            20: 'B',
+            40: 'C',
+            60: 'D',
+            80: 'E',
+            100: 'F',
+          }}
+        />
+      </Form.Item>
+
+      <Form.Item name="radio-group" label="Radio.Group">
+        <Radio.Group>
+          <Radio value="a">item 1</Radio>
+          <Radio value="b">item 2</Radio>
+          <Radio value="c">item 3</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item
+        name="radio-button"
+        label="Radio.Button"
+        rules={[
+          {
+            required: true,
+            message: 'Please pick an item!',
+          },
+        ]}
+      >
+        <Radio.Group>
+          <Radio.Button value="a">item 1</Radio.Button>
+          <Radio.Button value="b">item 2</Radio.Button>
+          <Radio.Button value="c">item 3</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item name="checkbox-group" label="Checkbox.Group">
+        <Checkbox.Group>
+          <Row>
+            <Col span={8}>
+              <Checkbox
+                value="A"
+                style={{
+                  lineHeight: '32px',
+                }}
               >
-                <h4> {this.props.list["wishlistname"]} </h4>
-              </a>
-            </li>
-            <li className="nav-item ml-auto">
-              <a href="#" className="nav-link ">
-                {" "}
-                <i className="fas fa-edit" /> Edit
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="#" style={{ color: "red" }} className="nav-link active">
-                {" "}
-                <i className="fas fa-trash-alt" /> Delete
-              </a>
-            </li>
-          </ul>
+                A
+              </Checkbox>
+            </Col>
+            <Col span={8}>
+              <Checkbox
+                value="B"
+                style={{
+                  lineHeight: '32px',
+                }}
+                disabled
+              >
+                B
+              </Checkbox>
+            </Col>
+            <Col span={8}>
+              <Checkbox
+                value="C"
+                style={{
+                  lineHeight: '32px',
+                }}
+              >
+                C
+              </Checkbox>
+            </Col>
+            <Col span={8}>
+              <Checkbox
+                value="D"
+                style={{
+                  lineHeight: '32px',
+                }}
+              >
+                D
+              </Checkbox>
+            </Col>
+            <Col span={8}>
+              <Checkbox
+                value="E"
+                style={{
+                  lineHeight: '32px',
+                }}
+              >
+                E
+              </Checkbox>
+            </Col>
+            <Col span={8}>
+              <Checkbox
+                value="F"
+                style={{
+                  lineHeight: '32px',
+                }}
+              >
+                F
+              </Checkbox>
+            </Col>
+          </Row>
+        </Checkbox.Group>
+      </Form.Item>
 
-          <div className="row">
-            <div className="col-md-12">
-              {/* navbar  */}
-              <div className="card-body">
-                <ul className="nav nav-tabs" id="myTab" role="tablist">
-                  <li className="nav-item">
-                    <a
-                      className="nav-link active"
-                      id="home-tab"
-                      data-toggle="tab"
-                      href="#tobuy"
-                      role="tab"
-                      aria-controls="home"
-                      aria-selected="false"
-                    >
-                      To buy
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      id="profile-tab"
-                      data-toggle="tab"
-                      href="#bought"
-                      role="tab"
-                      aria-controls="profile"
-                      aria-selected="false"
-                    >
-                      Bought
-                    </a>
-                  </li>
-                  <li className="nav-item ml-auto">
-                    <button onClick={this.listView} className="nav-link active">
-                     
-                      <i className="fas fa-list" /> List{" "}
-                    </button>
-                  </li>
-                  <li className="nav-item ">
-                    <button onClick={this.gridViews} href="#" className="nav-link active">
-                      
-                      <i className="fas fa-th" /> Grid{" "}
-                    </button>
-                  </li>
-                  
-                </ul>
-              </div>
-              {/* content */}
+      <Form.Item name="rate" label="Rate">
+        <Rate />
+      </Form.Item>
 
-              <div className="card-body">
-                <div className="tab-content" id="myTabContent">
-                  {/* to buy products  */}
-                  <div
-                    className="tab-pane fade active show"
-                    id="tobuy"
-                    role="tabpanel"
-                    aria-labelledby="home-tab"
-                  >
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="table-responsive">
-                          <table className="table">
-                            <thead>
-                              <tr>
-                                <th> Image </th>
-                                <th>Name </th>
-                                <th>Description </th>
-                                <th>Status</th>
-                                <th>Price</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {/* dynamique data */}
+      <Form.Item
+        name="upload"
+        label="Upload"
+        valuePropName="fileList"
+        getValueFromEvent={normFile}
+        extra="longgggggggggggggggggggggggggggggggggg"
+      >
+        <Upload name="logo" action="/upload.do" listType="picture">
+          <Button icon={<UploadOutlined />}>Click to upload</Button>
+        </Upload>
+      </Form.Item>
 
-                              {this.state.products.map((product)=>{
-                                if( product['status'] ==="to buy" ){
-                                return(
+      {/* <Form.Item label="Dragger">
+        <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+          <Upload.Dragger name="files" action="/upload.do">
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+          </Upload.Dragger>
+        </Form.Item>
+      </Form.Item> */}
 
-                                 <tr>
-                                  
-                                <th> <img width="50" height="50" src=""/> </th>
-                                <td> {product['productname']} </td>
-                                <td>{product['description']}</td>
-                                <td>{product['status']}</td>
-                                <td> {product['productprice']} </td>
-                              </tr>
-                                )
-                              }
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* bought products */}
-                  <div
-                    className="tab-pane fade"
-                    id="bought"
-                    role="tabpanel"
-                    aria-labelledby="profile-tab"
-                  >
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="table-responsive">
-                          <table className="table">
-                            <thead>
-                              <tr>
-                                <th>Image</th>
-                                <th>Name </th>
-                                <th>description </th>
-                                <th>Status</th>
-                                <th>Price</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {/* dynamique data  */}
-                              {this.state.products.map((product)=>{
-                                if( product['status'] ==="bought" )
-                                return(
+      <Form.Item
+        wrapperCol={{
+          span: 12,
+          offset: 6,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
-                                 <tr>
-                                  
-                                <th> <img width="40" height="40" src={product['imageurl']} /> </th>
-                                <td> {product['productname']} </td>
-                                <td>{product['description']}</td>
-                                <td>{product['status']}</td>
-                                <td> {product['productprice']} </td>
-                              </tr>
-                                )
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default Content;
+ReactDOM.render(<Demo />, mountNode);

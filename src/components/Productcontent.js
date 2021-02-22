@@ -1,8 +1,18 @@
 import axios from "axios";
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { Modal, Button, Form, Input } from "antd";
-
+import { Modal, Button, Form } from "antd";
+import {
+  Upload,
+  DatePicker,
+  Switch,
+  Input,
+  InputNumber,
+  Select,
+  TextArea,
+} from "antd";
+import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+const { Option } = Select;
 const layout = {
   labelCol: {
     span: 8,
@@ -17,296 +27,246 @@ const tailLayout = {
     span: 16,
   },
 };
+const normFile = (e) => {
+  console.log("Upload event:", e);
 
+  if (Array.isArray(e)) {
+    return e;
+  }
+
+  return e && e.fileList;
+};
 
 class Productcontent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
-      isModalVisible : false ,
-      isModalVisible2 : false 
+      isModalVisible: false,
+      isModalVisible0: false,
     };
-  }
-  formRef = React.createRef();
-  componentDidMount() {
-     const id = this.props.list["wishlistname"]
-    axios
-      .get(`http://localhost:4000/product/wishlist/${id}`)
-      .then((response) => {
-        this.setState({ products: response.data });
-      })
-      .catch((error) => {
-        console.log({ error });
-      });
   }
   showModal = () => {
     this.setState({ isModalVisible: true });
   };
- 
-  onCancel = () => {
+  showModal0 = () => {
+    this.setState({ isModalVisible0: true });
+  };
+  handleCancel = () => {
     this.setState({ isModalVisible: false });
-    this.formRef.current.resetFields();
+  };
+  handleCancel0 = () => {
+    this.setState({ isModalVisible0: false });
+  };
+  handleOk = () => {
+    const id = this.props.list["_id"];
+    axios
+      .delete(`http://localhost:4000/product/id/${id}`)
+      .then((response) => {
+        console.log("done");
+        this.setState({ isModalVisible: false });
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
   };
   onFinish = (values) => {
-const id =this.props.list["_id"]
-    axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
-      .then((response) => {
-        this.setState({ key: Math.random() });
-      })
-      .catch((error) => {
-        console.log({ error });
-      });
-    //this.setwishlist(values.wishlistname);
-    this.setState({ isModalVisible: false });
-    this.formRef.current.resetFields();
-  };
-  showModal2 = () => {
-    this.setState({ isModalVisible2: true });
-  };
-  handleOk =()=>{
-    const id =this.props.list["_id"]
-    axios.delete(`http://localhost:4000/wishlist/id/${id}`)
-      .then((response) => {
-    console.log('done')
-    this.setState({ isModalVisible2: false });
-      })
-      .catch((error) => {
-        console.log({ error });
-      });
-   }
-   handleCancel2 = () => {
-    this.setState({ isModalVisible2: false });
-  };
+      console.log(values)
+    // const id =this.props.list["_id"]
+    //     axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
+    //       .then((response) => {
+    //         this.setState({ key: Math.random() });
+    //       })
+    //       .catch((error) => {
+    //         console.log({ error });
+    //       });
+        //this.setwishlist(values.wishlistname);
+        this.setState({ isModalVisible0: false });
+      };
+
   render() {
     return (
-      <div id="body">
-        <div className="container">
-          {/* header */}
-
-          <ul className="nav">
-            <li className="nav-item">
-              <a
-                className="nav-link active"
-                id="home-tab"
-                data-toggle="tab"
-                href="#home"
-                role="tab"
-                aria-controls="home"
-                aria-selected="false"
-              >
-                <h4> {this.props.list["wishlistname"]} </h4>
-              </a>
-            </li>
-            <li className="nav-item ml-auto">
-             
-                <Button onClick={this.showModal} type="primary">
-                <i className="fas fa-edit" /> Edit
-                              </Button>
-
-                              <Modal
-                            title="Edit wishlist "
-                            visible={this.state.isModalVisible}
-                            footer={null}
-                            onCancel={this.onCancel}
-                            focusTriggerAfterClose={false}
-                          >
-                            <Form
-                              {...layout}
-                              ref={this.formRef}
-                              name="control-ref"
-                              onFinish={this.onFinish}
-                            >
-                              <Form.Item
-                                name="wishlistname"
-                                label="wishlist name"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please input your wishlist name!",
-                                  },
-                                ]}
-                              >
-                                <Input />
-                              </Form.Item>
-
-                              <Form.Item {...tailLayout}>
-                                <Button
-                                  style={{ marginRight: "8px" }}
-                                  htmlType="button"
-                                  onClick={this.onCancel}
-                                >
-                                  Cancel
-                                </Button>
-                                <Button type="primary" htmlType="submit">
-                                  Done
-                                </Button>
-                              </Form.Item>
-                            </Form>
-                          </Modal>
-
-            </li>
-            <li className="nav-item">
-              <a href="#" style={{ color: "red" }} className="nav-link active">
-                {" "}
-                
-
-                <Button type="primary" onClick={this.showModal2}>
-                <i className="fas fa-trash-alt" />  Delete
-      </Button>
-      <Modal title="Are you sure to delete wishlist" visible={this.state.isModalVisible2} onOk={this.handleOk} onCancel={this.handleCancel2}>
-      </Modal>
-              </a>
-            </li>
-          </ul>
-          <div className="row">
-            <div className="col-md-12">
-              {/* navbar  */}
-              <div className="card-body">
-                <ul className="nav nav-tabs" id="myTab" role="tablist">
-                  <li className="nav-item">
-                    <a
-                      className="nav-link active"
-                      id="home-tab"
-                      data-toggle="tab"
-                      href="#tobuy"
-                      role="tab"
-                      aria-controls="home"
-                      aria-selected="false"
-                    >
-                      To buy
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      id="profile-tab"
-                      data-toggle="tab"
-                      href="#bought"
-                      role="tab"
-                      aria-controls="profile"
-                      aria-selected="false"
-                    >
-                      Bought
-                    </a>
-                  </li>
-                  <li className="nav-item ml-auto">
-                    <a  className="nav-link active">
-                      <i className="fas fa-list" /> List{" "}
-                    </a>
-                  </li>
-                  <li className="nav-item ">
-                    <a
-                      
-                      href="#"
-                      className="nav-link"
-                    >
-                      <i className="fas fa-th" /> Grid{" "}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              {/* content */}
-
-              <div className="card-body">
-                <div className="tab-content" id="myTabContent">
-                  {/* to buy products  */}
+      <div className="col-lg-12">
+        <div className="row">
+          <div className="col-md-8">
+            <div className="card-body">
+              <form>
+                <div className="form-row">
                   <div
-                    className="tab-pane fade active show"
-                    id="tobuy"
-                    role="tabpanel"
-                    aria-labelledby="home-tab"
+                    className="form-group col-md-6"
+                    style={{ border: "1px solid #cccccc" }}
                   >
-                    <div className="card">
-                      <div className="card-body">
-                          {/* dynamique data */}
-                          <table className="table" style ={
-                            {width : "100%"}
-                          }>
-                            <thead>
-                              <tr>
-                                <th>Image</th>
-                                <th>Name </th>
-                                <th>description </th>
-                                <th>Status</th>
-                                <th>Price</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-
-                             { 
-                                  this.state.products.map((product) => {
-                                    if (product["status"] === "to buy") {
-                                      return (
-                                           <tr>
-        
-                                          <th> <img width="50" height="50" src=""/> </th>
-                                          <td> {product['productname']} </td>
-                                          <td>{product['description']}</td>
-                                          <td>{product['status']}</td>
-                                          <td> {product['productprice']} </td>
-                                        </tr>
-                                      );
-                                    }
-                                  })
-                                }
-                               
-                          </tbody>
-                          </table>
-                        </div>
-                    
-                    </div>
+                    <img
+                      name="image"
+                      width="200px"
+                      height="200px"
+                      src={this.props.list["imageurl"]}
+                    />
                   </div>
-                  {/* bought products */}
-                  <div
-                    className="tab-pane fade"
-                    id="bought"
-                    role="tabpanel"
-                    aria-labelledby="profile-tab"
-                  >
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="table-responsive">
-                          <table className="table">
-                            <thead>
-                              <tr>
-                                <th>Image</th>
-                                <th>Name </th>
-                                <th>description </th>
-                                <th>Status</th>
-                                <th>Price</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {/* dynamique data  */}
-                              {this.state.products.map((product) => {
-                                if (product["status"] === "bought")
-                                  return (
-                                    <tr>
-                                      <th>
-                                        {" "}
-                                        <img
-                                          width="40"
-                                          height="40"
-                                          src={product["imageurl"]}
-                                        />{" "}
-                                      </th>
-                                      <td> {product["productname"]} </td>
-                                      <td>{product["description"]}</td>
-                                      <td>{product["status"]}</td>
-                                      <td> {product["productprice"]} </td>
-                                    </tr>
-                                  );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
+                  <div className="form-group col-md-6">
+                    <div className="form-row">
+                      <h5> {this.props.list["productname"]} </h5>
+                    </div>
+                    <div className="form-row">
+                      <p> {this.props.list["description"]} </p>
+                    </div>
+                    <br />
+                    <div class="form-group row">
+                      <h6 class="col-sm-3">Price:</h6>
+                      <div class="col-sm-3">
+                        <p> {this.props.list["productprice"]} $ </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+                <div className="form-group">
+                  <label htmlFor="state">Wishlist</label>
+                  <select
+                    name="state"
+                    className="form-control col-md-4"
+                    required
+                  >
+                    <option value selected>
+                      {this.props.list["wishlistname"]}
+                    </option>
+                    <option value={1}> wishlist 1</option>
+                    <option value={2}> wishlist 1</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="state">Status</label>
+                  <select
+                    name="state"
+                    className="form-control col-md-4"
+                    required
+                  >
+                    <option value selected>
+                      {this.props.list["status"]}
+                    </option>
+                    <option value={1}> Bought </option>
+                  </select>
+                </div>
+              </form>
             </div>
+          </div>
+          <div className="col-md-2">
+            <Button type="primary" onClick={this.showModal0}>
+              <i className="fas fa-edit" /> Edit
+            </Button>
+            <Modal
+              title="Edit Product"
+              visible={this.state.isModalVisible0}
+              footer={null}
+              onCancel={this.handleCancel0}
+            >
+              <Form
+                {...layout}
+                ref={this.formRef}
+                name="control-ref"
+                onFinish={this.onFinish}
+              >
+                <Form.Item
+                  name="upload"
+                  label="Upload"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  extra="longgggggggggggggggggg"
+                >
+                  <Upload name="logo" action="/upload.do" listType="picture">
+                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  </Upload>
+                </Form.Item>
+                <Form.Item
+                  label=" Name"
+                  required
+                  tooltip="This is a required field"
+                  
+                >
+                  <Input placeholder={this.props.list["productname"]} />
+                </Form.Item>
+                <Form.Item label="Price ">
+                  <Form.Item name="input-number" noStyle>
+                    <InputNumber placeholder={this.props.list["productprice"]} />
+                  </Form.Item>
+                </Form.Item>
+                <Form.Item
+                  name="currency"
+                  label="currency"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder={this.props.list["currency"]} >
+                    <Option value="china">TND</Option>
+                    <Option value="usa">Euro</Option>
+                    <Option value="usa">Dollar</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item name={["user", "introduction"]} label="Description">
+                  <Input.TextArea placeholder={this.props.list["description"]} />
+                </Form.Item>
+                <Form.Item
+                  name="wishlist"
+                  label="wishlist"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder={this.props.list["wishlistname"]}>
+
+                      {
+                          this.props.wishlists.map((element)=>{
+                              return(
+                                <Option value={element["wishlistname"]}> {element["wishlistname"]} </Option>
+                              )
+                          })
+                      }
+            
+
+
+
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="Status"
+                  label="Status"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder={this.props.list["status"]}>
+                    <Option value="china">To buy</Option>
+                    <Option value="usa">Bought</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item {...tailLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                  <Button htmlType="button" onClick={this.handleCancel0}>
+                    Cancel
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Modal>
+
+            <Button type="primary" onClick={this.showModal}>
+              <i className="fas fa-trash-alt" /> Delete
+            </Button>
+            <Modal
+              title="Are you sure to delete this product"
+              visible={this.state.isModalVisible}
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+            ></Modal>
           </div>
         </div>
       </div>
