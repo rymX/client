@@ -27,24 +27,22 @@ const tailLayout = {
     span: 16,
   },
 };
-const normFile = (e) => {
-  console.log("Upload event:", e);
-
-  if (Array.isArray(e)) {
-    return e;
-  }
-
-  return e && e.fileList;
-};
-
 class Productcontent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isModalVisible: false,
       isModalVisible0: false,
+      file : {} ,
     };
   }
+   normFile = (e) => {
+    this.setState({ file: e.file });
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
   formRef = React.createRef();
   showModal = () => {
     this.setState({ isModalVisible: true });
@@ -61,10 +59,9 @@ class Productcontent extends Component {
   };
   handleOk = () => {
     const id = this.props.list["_id"];
-    axios
-      .delete(`http://localhost:4000/product/id/${id}`)
+    axios.delete(`http://localhost:4000/product/id/${id}`)
       .then((response) => {
-       this.props.action();
+        this.props.forceReloder();
       })
       .catch((error) => {
         console.log({ error });
@@ -72,16 +69,30 @@ class Productcontent extends Component {
       this.setState({ isModalVisible: false });
   };
   onFinish = (values) => {
-      console.log(values)
-    const id =this.props.list["_id"]
-        axios.patch(`http://localhost:4000/wishlist` ,{id : id , wishlistname :values.wishlistname})
-          .then((response) => {
-            this.setState({ key: Math.random() });
-          })
-          .catch((error) => {
-            console.log({ error });
-          });
-        this.setwishlist(values.wishlistname);
+
+   const productid = this.props.list["_id"] ;
+   const owner = this.props.list["owner"];
+      const fd = new FormData();
+      fd.append("productimg", this.state.file.originFileObj);
+      fd.append("productid",productid);
+      fd.append("productname", values.productname);
+      fd.append("productprice", values.price);
+      fd.append("currency", values.currency);
+      fd.append("description", values.description);
+      fd.append("wishlistname", values.wishlistname);
+      fd.append("status", values.Status);
+      fd.append("owner", owner);
+
+      axios.patch("http://localhost:4000/product/", fd)
+      .then((response) => {
+        this.props.forceReloder2();
+        this.setState({ isModalVisible0: false });
+      })
+      .catch((error) => {
+        console.log({ error });
+        this.setState({ isModalVisible0: false });
+      });
+        
         this.setState({ isModalVisible0: false });
       };
 
@@ -169,27 +180,34 @@ class Productcontent extends Component {
               >
                 <Form.Item
                   name="upload"
-                  label="Upload"
+                  label="image"
                   valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  extra="longgggggggggggggggggg"
+                  getValueFromEvent={this.normFile}
+                  required
                 >
-                  <Upload name="logo" action="/upload.do" listType="picture">
+                  <Upload name="logo" 
+                  action="/upload.do" 
+                  listType="picture">
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
                 <Form.Item
                   label=" Name"
+                  name="productname"
                   required
                   tooltip="This is a required field"
                   
                 >
                   <Input placeholder={this.props.list["productname"]} />
                 </Form.Item>
-                <Form.Item label="Price ">
-                  <Form.Item name="input-number" noStyle>
-                    <InputNumber placeholder={this.props.list["productprice"]} />
-                  </Form.Item>
+                <Form.Item 
+                label="Price "
+                name="price"
+                required>
+                  
+                    <Input 
+                    placeholder={this.props.list["productprice"]} />
+                  
                 </Form.Item>
                 <Form.Item
                   name="currency"
@@ -202,23 +220,19 @@ class Productcontent extends Component {
                   ]}
                 >
                   <Select placeholder={this.props.list["currency"]} >
-                    <Option value="china">TND</Option>
-                    <Option value="usa">Euro</Option>
-                    <Option value="usa">Dollar</Option>
+                    <Option value="TND">TND</Option>
+                    <Option value="Euro">Euro</Option>
+                    <Option value="Dollar">Dollar</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item name={["user", "introduction"]} label="Description">
+                <Form.Item 
+                name={["description"]}
+                label="Description">
                   <Input.TextArea placeholder={this.props.list["description"]} />
                 </Form.Item>
                 <Form.Item
                   name="wishlist"
                   label="wishlist"
-                  hasFeedback
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
                 >
                   <Select placeholder={this.props.list["wishlistname"]}>
 
@@ -246,8 +260,8 @@ class Productcontent extends Component {
                   ]}
                 >
                   <Select placeholder={this.props.list["status"]}>
-                    <Option value="china">To buy</Option>
-                    <Option value="usa">Bought</Option>
+                    <Option value="To buy">To buy</Option>
+                    <Option value="Bought">Bought</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item {...tailLayout}>

@@ -38,9 +38,14 @@ export default class Dashboard extends Component {
       file: {},
     };
     this.forceReloder = this.forceReloder.bind(this);
+    this.forceReloder2 = this.forceReloder2.bind(this);
   }
   forceReloder=()=>{
-    this.forceUpdate();
+    this.getWishlists(this.state.actualUserid);
+    this.getProducts(this.state.actualUserid);
+  }
+  forceReloder2=()=>{
+    this.getProducts(this.state.actualUserid);
   }
   formRef = React.createRef();
   normFile = (e) => {
@@ -326,7 +331,9 @@ export default class Dashboard extends Component {
                         {_.isEmpty(this.state.actualwishlist) ? (
                           <h1> you have no wishlists yet </h1>
                         ) : (
-                          <WishlistContent list={this.state.actualwishlist} forceReloder={ this.forceReloder}/>
+                          <WishlistContent 
+                          list={this.state.actualwishlist} 
+                          forceReloder={ this.forceReloder}/>
                         )}
                       </div>
                     </div>
@@ -509,6 +516,7 @@ export default class Dashboard extends Component {
                           <Productcontent
                             list={this.state.actualproduct}
                             wishlists={this.state.wishlists}
+                            forceReloder2={ this.forceReloder2}
                           />
                         )}
                       </div>

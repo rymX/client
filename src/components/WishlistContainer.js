@@ -51,8 +51,8 @@ class WishlistContent extends Component {
     const id = this.props.list["_id"]
     axios.patch(`http://localhost:4000/wishlist`, { id: id, wishlistname: values.wishlistname })
       .then((response) => {
-        // component should re-render
-        this.forceUpdate();
+        
+        this.props.forceReloder();
       })
       .catch((error) => {
         console.log({ error });
