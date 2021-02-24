@@ -1,70 +1,28 @@
-# Getting Started with Create React App
+# Structure of the Application 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![alt text](https://github.com/rymX/client/blob/develope/public/assets/img/structure.png?raw=true)
 
-## Available Scripts
 
-In the project directory, you can run:
+### `Client Side` 
 
-### `yarn start`
+i am using the package create-react-app to create a react application ,
+I have the App component , wchich is the root component of the application , Nested inside it i have login component and the signup component, 
+When the user logged in a dashboard component will be loaded , Nested on it a ProductContainer and it will be responsible for listing out all the products properties allow us to delete and edit product , the same thing with WishhlistContainer.
+For state managing i am not using any syteme for state managing , because , in my opinion it will be a quite a bit more work for small state , i am using the concept of render prop to passing data between components.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+i use the framework  Bootstrap and Bootstrap grid  to help me to create responsive web applications
+ and responsive mobile-first grid system that uses containers,
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I Use AntDesign which is  UI framework for react and an open source tools  as they give me pre-build components that are efficient, responsive, and customizable.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+### `Server Side` 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+I build a REST API with Node.js and Express. [server](https://github.com/rymX/server)
+I choose express as it is a frame work  allow us to easily manage resquest and  responses server side , and it saves our time and allow us to write clean code. and for routing i use  Express Router.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+for Authorization I use jwt and express session  to make sure that the user who send the request to the server is actually the same user who logged in , and to protect our Routes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+i use the open-source document database MONGODB  to go further and faster when developing applications that have to handle data of all sorts in a scalable way.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
